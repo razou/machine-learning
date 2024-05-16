@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model_registry', type=str, default="Artefacts", help="Model registry.")
+    parser.add_argument('--model_registry', type=str, default="artefacts", help="Model registry.")
     parser.add_argument('--model_dir', type=str, default="lr_model", help="Model dir")
     parser.add_argument('--model_name', type=str, default="lr", help="Model name")
     args = parser.parse_args()
@@ -70,7 +70,7 @@ def main():
     bias = lr_model.bias
     classes = lr_model.classes
 
-    images_dir = os.path.join(ROOT_DIR, "DATASETS/images")
+    images_dir = os.path.join(ROOT_DIR, "data/images")
     for img in os.listdir(images_dir):
         img_path = os.path.join(images_dir, img)
         try:

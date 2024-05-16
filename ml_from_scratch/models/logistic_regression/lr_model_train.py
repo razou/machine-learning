@@ -25,7 +25,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument('--train_filename', type=str, default="train_catvnoncat.h5",
                         help="Train data file name")
     parser.add_argument('--test_filename', default="test_catvnoncat.h5", help="Test data file name")
-    parser.add_argument('--data_dir', default="DATASETS", help="Data directory")
+    parser.add_argument('--data_dir', default="data", help="Data directory")
     parser.add_argument('--learning_rate', type=float, default=0.005, help="Learning rate")
     parser.add_argument('--num_iterations', type=int, default=2000,
                         help="Number of iterations (for params. optimizer)")
@@ -34,7 +34,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument('--evaluate_model', type=bool, default=True,
                         help="Model assessment on train and test sets")
     parser.add_argument('--save_model', type=bool, default=True, help="Save model parameters")
-    parser.add_argument('--model_registry', type=str, default="Artefacts", help="Model registry")
+    parser.add_argument('--model_registry', type=str, default="artefacts", help="Model registry")
     parser.add_argument('--model_dir', type=str, default="lr_model", help="Output dir")
     parser.add_argument('--model_name', type=str, default="lr", help="Model artefact name (.tar.gz file)")
 
