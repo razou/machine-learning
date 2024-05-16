@@ -13,14 +13,14 @@ logger = logging.getLogger(__name__)
 ROOT_DIR = pathlib.Path(__file__).parent.parent.parent.parent.resolve()
 
 
-def find_best_alpha(x_train, y_train, x_test, y_test, classes, learning_rates: List[float], num_iter: int):
+def find_best_alpha(x_train, y_train, x_test, y_test, target_classes, learning_rates: List[float], num_iter: int):
     trainer = Trainer()
     models = {}
 
     for lr in tqdm.tqdm(learning_rates, desc="CostsPerLearningRate"):
         print("Training a model with learning rate: " + str(lr))
         params = {"learning_rate": lr, "num_iterations": num_iter}
-        res = trainer.train(x_train, y_train, x_test, y_test, classes, **params)
+        res = trainer.train(x_train, y_train, x_test, y_test, target_classes, **params)
         models[str(lr)] = res.costs
 
     for lr in learning_rates:
@@ -69,7 +69,7 @@ if __name__ == "__main__":
         y_train=train_y,
         x_test=test_x,
         y_test=test_y,
-        classes=classes,
+        target_classes=classes,
         learning_rates=alpha_to_test,
         num_iter=num_iterations
     )
