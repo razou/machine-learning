@@ -11,12 +11,12 @@ The goal of this example is to build image classifier model using Logistic regre
   - $\alpha$:  learning rate
 - For one training example
   - $z^{(i)}$
-  - $\hat(y)^{(i)} = sigmoid(z^{(i)}) = \frac{1}{1 + \exp(-x^{(i)})}$
-  - $Loss(y^{(i)}, hat(y)^{(i)}) = y^{(i)} * \log(hat(y)^{(i)} + (1 - y^{(i)}) * \log(1 - hat(y)^{(i)}$
-- The Cost function (for the whole training set): J = $\frac{1}{m}\sum Loss(y^{(i)}, hat(y)^{(i)})$
+  - $\hat{y}^{(i)} = sigmoid(z^{(i)}) = \frac{1}{1 + \exp(-x^{(i)})}$
+  - $Loss(y^{(i)}, \hat{y}^{(i)}) = y^{(i)} * \log(\hat{y}^{(i)} + (1 - y^{(i)}) * \log(1 - \hat{y}^{(i)}$
+- The Cost function (for the whole training set): J = $\frac{1}{m}\sum Loss(y^{(i)}, hat{y}^{(i)})$
 - Optimizer: gradient decent
-  - $dW = \frac{\derivative(J)}{\derivative(W)}= \frac{1}{m} X(\hat(Y) - Y)^T$
-  - $db = frac{\derivative(J)}{\derivative(b)} = \frac\sum(hat(y)^{(i)}  - y^(i))$
+  - $dW = \frac{\partial(J)}{\partial(W)}= \frac{1}{m} X(\hat{Y} - Y)^T$
+  - $db = frac{\partial(J)}{\partial(b)} = \frac\sum(\hat{y}^{(i)}  - y^(i))$
   - The goal is to learn $W$ and $b$ by minimizing $J$:
     - After each iteration $W$ and $b$ are updated as following 
       - $W := W - \alpha * dW$

@@ -27,6 +27,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument('--test_filename', default="test_catvnoncat.h5", help="Test data file name")
     parser.add_argument('--data_dir', default="data", help="Data directory")
     parser.add_argument('--learning_rate', type=float, default=0.005, help="Learning rate")
+    parser.add_argument('--early_stopping', type=bool, default=True, help="Early Stopping")
     parser.add_argument('--num_iterations', type=int, default=2000,
                         help="Number of iterations (for params. optimizer)")
     parser.add_argument('--verbose', type=bool, default=True)
@@ -47,16 +48,18 @@ class Trainer:
         pass
 
     @staticmethod
-    def params_initializer(dim: int) -> Tuple[np.array, float]:
+    def params_initializer(dim: int, init_param: float = 0.01) -> Tuple[np.array, float]:
         """
            - Creates a vector of zeros of shape (dim, 1) for W
            - Initializes the bias b to 0.
 
+           :param init_param: To initialize to a very small random values
            :param dim: Size of W vector (i.e, number of parameters)
            :return: weights and bias
         """
 
-        weights = np.zeros((dim, 1), dtype=float)
+        # weights = np.zeros((dim, 1), dtype=float)
+        weights = init_param * np.random.randn(dim, 1)
         bias = 0.0
         return weights, bias
 
