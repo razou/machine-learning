@@ -1,16 +1,15 @@
 import logging
 import os
-import pathlib
 from typing import List
 
 import tqdm
 from matplotlib import pyplot as plt
 
+from constants import ROOT_DIR
 from data_preparation import DataPreparation
 from lr_model_train import Trainer, _parse_args
 
 logger = logging.getLogger(__name__)
-ROOT_DIR = pathlib.Path(__file__).parent.parent.parent.parent.resolve()
 
 
 def find_best_alpha(x_train, y_train, x_test, y_test, target_classes, learning_rates: List[float], num_iter: int):

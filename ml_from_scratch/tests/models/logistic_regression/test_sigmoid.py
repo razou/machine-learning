@@ -1,5 +1,4 @@
 import unittest
-
 import numpy as np
 from ml_from_scratch.models.logistic_regression impport sigmoid
 

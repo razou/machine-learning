@@ -1,6 +1,6 @@
 Logistic regression for image
 The goal of this example is to build image classifier model using Logistic regression implemented from scratch.
-- The implementation is mainly based on the power the vectorization of the `numpy` library
+- The implementation is mainly based on the power the vectorization of the `Numpy` library
   - It avoids as much as possible the usage of loops (e.g., for loop, while loop, ...)
 
 # Mathematical Formulation
@@ -11,9 +11,9 @@ The goal of this example is to build image classifier model using Logistic regre
   - $\alpha$:  learning rate
 - For one training example
   - $z^{(i)}$
-  - $\hat{y}^{(i)} = sigmoid(z^{(i)}) = \frac{1}{1 + \exp(-x^{(i)})}$
-  - $Loss(y^{(i)}, \hat{y}^{(i)}) = y^{(i)} * \log(\hat{y}^{(i)} + (1 - y^{(i)}) * \log(1 - \hat{y}^{(i)}$
-- The Cost function (for the whole training set): J = $\frac{1}{m}\sum Loss(y^{(i)}, hat{y}^{(i)})$
+  - $\hat{y}^{(i)} = sigmoid(z^{(i)}) = \frac{1}{1 + \exp(-z^{(i)})}$
+  - $Loss(y^{(i)}, \hat{y}^{(i)}) = y^{(i)} * \log(\hat{y}^{(i)} + (1 - y^{(i)}) * \log(1 - \hat{y}^{(i)})$
+- The Cost function (for the whole training set): J = $\frac{1}{m}\sum Loss(y^{(i)}, \hat{y}^{(i)})$
 - Optimizer: gradient decent
   - $dW = \frac{\partial(J)}{\partial(W)}= \frac{1}{m} X(\hat{Y} - Y)^T$
   - $db = frac{\partial(J)}{\partial(b)} = \frac\sum(\hat{y}^{(i)}  - y^(i))$
@@ -29,8 +29,10 @@ The goal of this example is to build image classifier model using Logistic regre
 - Then to `logistic_regression` directory 
 - Run this command to get help: `python lr_model_train.py --help`
 - Train logistic regression model: `lr_model_train.py`
-  - You can specify parameters from command: `lr_model_train.py --learning_rate 0.01 --num_iterations 300`
+  - You can specify parameters from command: `lr_model_train.py --learning_rate 0.01 --num_iterations 300 --verbose --save_model`
 - Optimization
   - Find the best value for the learning parameter: Run `python find_best_learning_rate.py`
 - Make predictions
   - `python make_prediction.py`
+
+  

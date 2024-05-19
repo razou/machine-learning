@@ -27,14 +27,15 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument('--test_filename', default="test_catvnoncat.h5", help="Test data file name")
     parser.add_argument('--data_dir', default="data", help="Data directory")
     parser.add_argument('--learning_rate', type=float, default=0.005, help="Learning rate")
-    parser.add_argument('--early_stopping', type=bool, default=True, help="Early Stopping")
+    parser.add_argument('--early_stopping', default=False, action="store_true",  help="Early Stopping")
     parser.add_argument('--num_iterations', type=int, default=2000,
                         help="Number of iterations (for params. optimizer)")
-    parser.add_argument('--verbose', type=bool, default=True)
-    parser.add_argument('--visualize_cost', type=bool, default=False, help="Plot cost function")
-    parser.add_argument('--evaluate_model', type=bool, default=True,
+    parser.add_argument('--verbose', default=False, action="store_true")
+    parser.add_argument('--visualize_cost', default=False, help="Plot cost function", action="store_true")
+    parser.add_argument('--evaluate_model', default=False, action="store_true",
                         help="Model assessment on train and test sets")
-    parser.add_argument('--save_model', type=bool, default=True, help="Save model parameters")
+    parser.add_argument('--save_model', default=False, help="Save model parameters",
+                        action="store_true")
     parser.add_argument('--model_registry', type=str, default="artefacts", help="Model registry")
     parser.add_argument('--model_dir', type=str, default="lr_model", help="Output dir")
     parser.add_argument('--model_name', type=str, default="lr", help="Model artefact name (.tar.gz file)")
@@ -48,9 +49,9 @@ class Trainer:
         pass
 
     @staticmethod
-    def params_initializer(dim: int, init_param: float = 0.01) -> Tuple[np.array, float]:
+    def params_initializer(dim: int, init_param: float = 0.01) -> Tuple[np.ndarray, float]:
         """
-           - Creates a vector of zeros of shape (dim, 1) for W
+           - Creates a vector of zeros or very small values of shape (dim, 1) for W
            - Initializes the bias b to 0.
 
            :param init_param: To initialize to a very small random values
