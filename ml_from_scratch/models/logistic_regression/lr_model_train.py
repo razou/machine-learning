@@ -7,12 +7,12 @@ from typing import Tuple, List, Dict, Any, Union
 import numpy as np
 import tqdm
 
-from constants import ROOT_DIR
-from costs_visualizer import plot_costs
-from data_preparation import DataPreparation
-from data_types import LRModel
+from ml_from_scratch.utils.costs_visualizer import plot_costs
 from lr_model_predict import predict, sigmoid
-from utils import save_model_artefact
+from ml_from_scratch.constants.data_root_dir import ROOT_DIR
+from ml_from_scratch.data_processing.data_preparation import DataPreparation
+from ml_from_scratch.data_processing.data_types import LRModel
+from ml_from_scratch.utils.persist_model import save_model_artefact
 
 logger = logging.getLogger(__name__)
 

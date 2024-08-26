@@ -1,8 +1,10 @@
 import logging
 from typing import Tuple
+
 import h5py
 import numpy as np
-from data_types import TidyData
+
+from ml_from_scratch.data_processing.data_types import TidyData
 
 logger = logging.getLogger(__name__)
 

@@ -1,6 +1,6 @@
-import unittest
 import numpy as np
-from ml_from_scratch.models.logistic_regression impport sigmoid
+
+sigmoid
 
 def test_sigmoid_test():
     x = np.array([0, 2])

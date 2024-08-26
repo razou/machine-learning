@@ -1,7 +1,6 @@
 from typing import Union
 
 import numpy as np
-from tqdm import tqdm
 
 
 def sigmoid(z: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
