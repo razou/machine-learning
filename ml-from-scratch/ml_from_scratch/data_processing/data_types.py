@@ -80,16 +80,30 @@ class TidyData:
 
 
 @dataclass
-class Cache:
+class LinearCache:
     """
-    cache "A", "W" and "b"  for the backward step computations
+    cache "A_prev", "W" and "b" after forward propagation. Useful for computing gradients.
     """
     A: np.ndarray
     W: np.ndarray
     b: np.ndarray
 
 
-class MLPModel:
+@dataclass
+class ActivationCache:
+    """
+    Cache Z, the linear part of the activation function. Useful during backpropagation step.
+    """
+    Z: np.ndarray
+
+
+@dataclass
+class ParametersCache:
+    linear_cache: LinearCache
+    activation_cache: ActivationCache
+
+
+class NeuralNetModel:
     def __init__(
             self,
             weights: np.ndarray,

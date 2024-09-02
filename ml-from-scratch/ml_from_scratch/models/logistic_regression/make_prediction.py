@@ -6,9 +6,9 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-from constants import ROOT_DIR
-from data_types import LRModel
 from lr_model_predict import predict
+from ml_from_scratch.constants.data_root_dir import ROOT_DIR
+from ml_from_scratch.data_processing.data_types import LRModel
 
 logger = logging.getLogger(__name__)
 

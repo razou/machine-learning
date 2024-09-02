@@ -2,12 +2,10 @@ import argparse
 import logging
 import os.path
 from pathlib import Path
-
 import numpy as np
 from PIL import Image
-
 from ml_from_scratch.constants.data_root_dir import ROOT_DIR
-from ml_from_scratch.data_processing.data_types import MLPModel
+from ml_from_scratch.data_processing.data_types import NeuralNetModel
 
 logger = logging.getLogger(__name__)
 
@@ -98,7 +96,7 @@ def main():
     model_dir_path = os.path.join(registry_dir_path, model_dir_name)
     model_artefact_path = os.path.join(model_dir_path, f"{model_artefact_name}.tar.gz")
 
-    lr_model = MLPModel.load_model(model_path=model_artefact_path)
+    lr_model = NeuralNetModel.load_model(model_path=model_artefact_path)
     weights = lr_model.weights
     bias = lr_model.bias
     classes = lr_model.classes

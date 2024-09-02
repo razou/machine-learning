@@ -5,9 +5,9 @@ from typing import List
 import tqdm
 from matplotlib import pyplot as plt
 
-from constants import ROOT_DIR
-from data_preparation import DataPreparation
 from lr_model_train import Trainer, _parse_args
+from ml_from_scratch.constants.data_root_dir import ROOT_DIR
+from ml_from_scratch.data_processing.data_preparation import DataPreparation
 
 logger = logging.getLogger(__name__)
 
