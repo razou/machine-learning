@@ -7,7 +7,6 @@ import numpy as np
 from numpy import ndarray
 from tqdm import tqdm
 
-
 from ml_from_scratch.constants.data_root_dir import ROOT_DIR
 from ml_from_scratch.data_processing.data_preparation import DataPreparation
 from ml_from_scratch.data_processing.data_types import LinearCache, ParametersCache
@@ -46,19 +45,24 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument('--optimizer', type=str, default='gradient_descent', help="Cost optimizer method",
                         choices=['gradient_descent', 'gradient_momentum', 'gradient_mini_batch', 'adam'])
 
-    parser.add_argument('--layers_dims', type=list, default=[12288, 20, 7, 5, 1],
+    parser.add_argument('--layers_dims', type=list, default=[12288, 64, 20, 7, 5, 1],
                         help="Number of node per layer, from layer 1 to output layer respectively")
 
     parser.add_argument('--num_iterations', type=int, default=2000,
                         help="Number of iterations (for params. optimizer)")
-    parser.add_argument('--verbose', default=False, action="store_true")
-    parser.add_argument('--visualize_cost', default=False, help="Plot cost function", action="store_true")
-    parser.add_argument('--print_cost', default=False, help="Print cost function at every X iteration",
-                        action="store_true")
-    parser.add_argument('--evaluate_model', default=False, action="store_true",
+
+    parser.add_argument('--verbose', type=str, default="False", choices=['True', 'False'],
+                        help='Enable verbose output (True or False)')
+
+    parser.add_argument('--visualize_cost', type=str, default="False", help="Plot cost function",
+                        choices=["True", "False"])
+
+    parser.add_argument('--evaluate_model', type=str, default="False", choices=['True', 'False'],
                         help="Model assessment on train and test sets")
-    parser.add_argument('--save_model', default=False, help="Save model parameters",
-                        action="store_true")
+
+    parser.add_argument('--save_model', type=str, default="False", choices=['True', 'False'],
+                        help='Save model artefact (True or False)')
+
     parser.add_argument('--model_registry', type=str, default="artefacts", help="Model registry")
     parser.add_argument('--model_dir', type=str, default="neural_net_model", help="Output dir")
     parser.add_argument('--model_name', type=str, default="neural_net", help="Model artefact name (.tar.gz file)")
@@ -399,6 +403,7 @@ class Trainer:
             b: float,
             verbose: bool = True
     ) -> None:
+
         """
         Evaluate model accuracy on train and test sets.
 
@@ -429,8 +434,8 @@ class Trainer:
     ) -> Tuple[Dict, List[float]]:
         num_iterations = kwargs.get("num_iterations", 500)
         learning_rate = kwargs.get("learning_rate", 0.05)
-        verbose = kwargs.get("verbose", True)
-        evaluate_model = kwargs.get("evaluate_model", False)
+        verbose = kwargs.get("verbose").lower() in ['true', '1', 't', 'y', 'yes']
+        evaluate_model = kwargs.get("evaluate_model").lower() in ['true', '1', 't', 'y', 'yes']
         num_sample_train = train_x_normalized.shape[0]
 
         logger.info(f"Initialize model parameters")
@@ -451,9 +456,9 @@ class Trainer:
                 model_parameters=model_parameters, learning_rate=learning_rate, gradients=grads
             )
 
-            if verbose and i % 100 == 0 or i == num_iterations - 1:
-                # tqdm.write("Cost after iteration {}: {}".format(i, cost_per_iter))
+            if verbose and (i % 100 == 0 or i == num_iterations - 1):
                 logger.info("Cost after iteration {}: {}".format(i, cost_per_iter))
+                # tqdm.write("Cost after iteration {}: {}".format(i, cost_per_iter))
 
             if i % 100 == 0 or i == num_iterations:
                 costs.append(cost_per_iter)
@@ -479,6 +484,10 @@ def main(args: argparse.Namespace):
     kw_args: Dict[str, Any] = vars(args)
     data_loader = DataPreparation()
 
+    print("-" * 20)
+    print(kw_args)
+    print('-' * 20)
+
     layers_dims = args.layers_dims
     hidden_activation = args.hidden_activation
     output_activation = args.output_activation
@@ -494,12 +503,13 @@ def main(args: argparse.Namespace):
     )
 
     # Output
-    save_model = args.save_model
+    save_model = args.save_model.lower() in ['true', '1', 't', 'y', 'yes']
+
     model_name = args.model_name
     model_dir = args.model_dir
     model_registry = args.model_registry
     output_dir = os.path.join(os.path.join(ROOT_DIR, model_registry), model_dir)
-    visualize_cost = args.visualize_cost
+    visualize_cost = args.visualize_cost.lower() in ['true', '1', 't', 'y', 'yes']
 
     # Data
     train_file_name = args.train_filename
@@ -518,7 +528,7 @@ def main(args: argparse.Namespace):
     test_y = tidy_data.test_y
     classes = tidy_data.classes
 
-    res = trainer.train(
+    model_parameter, cost = trainer.train(
         train_x_normalized=train_x,
         train_y=train_y,
         test_x_normalized=test_x,
@@ -526,6 +536,9 @@ def main(args: argparse.Namespace):
         classes=classes,
         **kw_args
     )
+
+    logger.info("Cost after train: ".format(cost))
+    logger.info("Number of layers: {}".format(len(model_parameter) // 2))
     """
     if save_model:
         output_file_name = os.path.join(output_dir, f"{model_name}.tar.gz")
@@ -545,5 +558,14 @@ def main(args: argparse.Namespace):
 
 
 if __name__ == "__main__":
+    """
+    for i in tqdm(range(10)):
+        cost_per_iter = i * 100  # Example calculation
+
+        # tqdm.write("Cost after iteration {}: {}".format(i, cost_per_iter))
+        logger.info("Cost after iteration {}: {}".format(i, cost_per_iter))
+        #print(f"Cost after iteration {i}: {cost_per_iter}")*
+    """
+
     parsed_args = _parse_args()
     main(parsed_args)
