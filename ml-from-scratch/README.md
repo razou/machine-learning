@@ -1,6 +1,8 @@
 # ML From Scratch
 
-We aim to explore some state-of-the-art machine learning models (e.g., logistic regression, svm, neural networks, decision trees) and implement them from scratch using two of the most powerful scientific libraries (i.e. **<span style='color: red;'>Numpy</span>** and **<span style='color: red;'>Scipy</span>**) . Our approach involves:
+We aim to explore some state-of-the-art machine learning models (e.g., logistic regression, svm, neural networks, decision trees) and implement them from scratch using two of the most powerful scientific libraries (i.e. **<span style='color: red;'>Numpy</span>** and **<span style='color: red;'>Scipy</span>**). 
+The focus will be more on the algorithm part rather than the model performance.
+Our approach involves:
 
 - Defining cost functions
 - Implementing optimization algorithms (e.g., Gradient Descent)

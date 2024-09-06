@@ -235,3 +235,15 @@ $$
 | **Sigmoid**             | $$\sigma(z) = \frac{1}{1 + e^{-z}}$$             | $$\sigma(z)(1 - \sigma(z))$$                | $$\delta^{[L]} = A^{[L]} - Y$$                 | $$\delta^{[l]} = (W^{[l+1]})^T \delta^{[l+1]} \cdot A^{[l]}(1 - A^{[l]})$$     |
 | **ReLU**                | $$\text{ReLU}(z) = \max(0, z)$$                  | $$\begin{cases} 1 & z > 0 \\ 0 & z \leq 0 \end{cases}$$ | $$\delta^{[L]} = A^{[L]} - Y$$                 | $$\delta^{[l]} = (W^{[l+1]})^T \delta^{[l+1]} \cdot \mathbf{1}_{Z^{[l]} > 0}$$ |
 | **Tanh**                | $$\tanh(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}}$$ | $$1 - \tanh^2(z)$$                          | $$\delta^{[L]} = A^{[L]} - Y$$                 | $$\delta^{[l]} = (W^{[l+1]})^T \delta^{[l+1]} \cdot (1 - (A^{[l]})^2)$$        |
+
+
+## Example of use case
+
+1. Install `poetry`
+   - `https://python-poetry.org/docs/#installation`
+2. Install dependencies 
+    - Run `poetry install` command from `ml-from-scratch` directory (which contains `pyproject.toml` file.) 
+3. Train Neural Network model
+   - Run `python train.py --help` from `machine-learning/ml-from-scratch/ml_from_scratch/models/neural_network` directory, to get help on details on parameters
+   - Example: Train model en verbose mode (i.e. print logs, and some metadatas), with 1000 epochs, evaluate it and save the model artefact at the end of training process. 
+     - `python train.py --verbose True --evaluate_model True --num_iterations 1000 --save_model True`

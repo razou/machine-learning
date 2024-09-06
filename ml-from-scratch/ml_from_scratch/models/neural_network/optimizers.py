@@ -1,13 +1,14 @@
 import math
+
 import numpy as np
 
 
 class Optimizer:
 
-    def update_parameters(self, parameters: dict, grads: dict, learning_rate: float, **kwargs):
-        """
-        This method should be overridden by subclasses.
-
+    def update_parameters(
+        self, parameters: dict, grads: dict, learning_rate: float, **kwargs
+    ):
+        """This method should be overridden by subclasses.
 
         Parameters
         ----------
@@ -18,17 +19,17 @@ class Optimizer:
 
         Returns
         -------
-
         """
         raise NotImplementedError
 
 
 class GradientDescent(Optimizer):
     @staticmethod
-    def update_parameters(model_parameters: dict, grads: dict, learning_rate: float, **kwargs):
-        """
-        Update model parameters using one step of gradient descent
-        
+    def update_parameters(
+        model_parameters: dict, grads: dict, learning_rate: float, **kwargs
+    ):
+        """Update model parameters using one step of gradient descent.
+
         Parameters:
         ---------
             - model_parameters: Python dictionary containing model parameters to be updated. Where:
@@ -39,7 +40,7 @@ class GradientDescent(Optimizer):
                 - grads['dW' + str(l)] = dWl
                 - grads['db' + str(l)] = dbl
             - learning_rate (scalar): Learning rate
-        
+
         Returns:
         -------
             - model_parameters -- python dictionary containing updated parameters
@@ -47,8 +48,12 @@ class GradientDescent(Optimizer):
         L = len(model_parameters) // 2
 
         for l in range(1, L + 1):
-            model_parameters["W" + str(l)] = model_parameters["W" + str(l)] - learning_rate * grads['dW' + str(l)]
-            model_parameters["b" + str(l)] = model_parameters["b" + str(l)] - learning_rate * grads['db' + str(l)]
+            model_parameters["W" + str(l)] = (
+                model_parameters["W" + str(l)] - learning_rate * grads["dW" + str(l)]
+            )
+            model_parameters["b" + str(l)] = (
+                model_parameters["b" + str(l)] - learning_rate * grads["db" + str(l)]
+            )
         return model_parameters
 
 
@@ -56,8 +61,7 @@ class MiniBatchGradientDescent(Optimizer):
 
     @staticmethod
     def random_mini_batches(X, Y, mini_batch_size=64, seed=0):
-        """
-        Creates a list of random mini-batches from (X, Y)
+        """Creates a list of random mini-batches from (X, Y)
 
         Parameters:
         ---------
@@ -80,22 +84,25 @@ class MiniBatchGradientDescent(Optimizer):
         shuffled_X = X[:, permutation]
         shuffled_Y = Y[:, permutation].reshape((1, m))
 
-        inc = mini_batch_size
-
         # Step 2 - Partition (shuffled_X, shuffled_Y).
         # Cases with a complete mini batch size only i.e., each of 64 examples.
         num_complete_minibatches = math.floor(
-            m / mini_batch_size)  # number of mini batches of size mini_batch_size in your partitionning
+            m / mini_batch_size
+        )  # number of mini batches of size mini_batch_size in your partitionning
         for k in range(0, num_complete_minibatches):
-            mini_batch_X = shuffled_X[:, k * mini_batch_size:(k + 1) * mini_batch_size]
-            mini_batch_Y = shuffled_Y[:, k * mini_batch_size:(k + 1) * mini_batch_size]
+            mini_batch_X = shuffled_X[
+                :, k * mini_batch_size : (k + 1) * mini_batch_size
+            ]
+            mini_batch_Y = shuffled_Y[
+                :, k * mini_batch_size : (k + 1) * mini_batch_size
+            ]
             mini_batch = (mini_batch_X, mini_batch_Y)
             mini_batches.append(mini_batch)
 
         # For handling the end case (last mini-batch < mini_batch_size i.e less than 64)
         if m % mini_batch_size != 0:
-            mini_batch_X = shuffled_X[:, num_complete_minibatches * mini_batch_size: m]
-            mini_batch_Y = shuffled_Y[:, num_complete_minibatches * mini_batch_size: m]
+            mini_batch_X = shuffled_X[:, num_complete_minibatches * mini_batch_size : m]
+            mini_batch_Y = shuffled_Y[:, num_complete_minibatches * mini_batch_size : m]
             mini_batch = (mini_batch_X, mini_batch_Y)
             mini_batches.append(mini_batch)
 
@@ -108,7 +115,7 @@ class GradientWithMomentum(Optimizer):
     def initialize_velocity(model_parameters: dict):
         """
         Initializes the velocity as a python dictionary with:
-                    - keys: "dW1", "db1", ..., "dWL", "dbL" 
+                    - keys: "dW1", "db1", ..., "dWL", "dbL"
                     - values: numpy arrays of zeros of the same shape as the corresponding gradients/parameters.
         Parameters:
         ----------
@@ -126,16 +133,16 @@ class GradientWithMomentum(Optimizer):
         v = {}
 
         for l in range(1, L + 1):
-            v["dW" + str(l)] = np.zeros(model_parameters['W' + str(l)].shape)
-            v["db" + str(l)] = np.zeros(model_parameters['b' + str(l)].shape)
+            v["dW" + str(l)] = np.zeros(model_parameters["W" + str(l)].shape)
+            v["db" + str(l)] = np.zeros(model_parameters["b" + str(l)].shape)
 
         return v
 
-    def update_parameters(self, model_parameters: dict, grads: dict, learning_rate: float, **kwargs):
+    def update_parameters(
+        self, model_parameters: dict, grads: dict, learning_rate: float, **kwargs
+    ):
+        """Update parameters using Momentum.
 
-        """
-        Update parameters using Momentum
-        
         Parameters:
         ----------
             - model_parameters: Python dictionary containing model parameters. Where:
@@ -149,7 +156,7 @@ class GradientWithMomentum(Optimizer):
                 - v['db' + str(l)] = ...
             - beta (float): Momentum hyperparameter
             - learning_rate (float): Learning rate
-        
+
         Returns:
         --------
             - model_parameters: Python dictionary containing updated model_parameters
@@ -162,10 +169,18 @@ class GradientWithMomentum(Optimizer):
         L = len(model_parameters) // 2
 
         for l in range(1, L + 1):
-            v["dW" + str(l)] = beta * v['dW' + str(l)] + (1 - beta) * grads['dW' + str(l)]
-            v["db" + str(l)] = beta * v['db' + str(l)] + (1 - beta) * grads['db' + str(l)]
-            model_parameters["W" + str(l)] = model_parameters["W" + str(l)] - learning_rate * v["dW" + str(l)]
-            model_parameters["b" + str(l)] = model_parameters["b" + str(l)] - learning_rate * v["db" + str(l)]
+            v["dW" + str(l)] = (
+                beta * v["dW" + str(l)] + (1 - beta) * grads["dW" + str(l)]
+            )
+            v["db" + str(l)] = (
+                beta * v["db" + str(l)] + (1 - beta) * grads["db" + str(l)]
+            )
+            model_parameters["W" + str(l)] = (
+                model_parameters["W" + str(l)] - learning_rate * v["dW" + str(l)]
+            )
+            model_parameters["b" + str(l)] = (
+                model_parameters["b" + str(l)] - learning_rate * v["db" + str(l)]
+            )
 
         return model_parameters, v
 
@@ -176,15 +191,15 @@ class Adam(Optimizer):
     def initialize_adam(model_parameters: dict):
         """
         Initializes v and s as two python dictionaries with:
-                    - keys: "dW1", "db1", ..., "dWL", "dbL" 
+                    - keys: "dW1", "db1", ..., "dWL", "dbL"
                     - values: numpy arrays of zeros of the same shape as the corresponding gradients/parameters.
-        
+
         Parameters:
         ----------
             - model_parameters: python dictionary containing model parameters.Where:
                 - model_parameters["W" + str(l)] = Wl
                 - model_parameters["b" + str(l)] = bl
-        
+
         Returns:
         --------
             - v: Python dictionary that will contain the exponentially weighted average of the gradient.
@@ -205,10 +220,11 @@ class Adam(Optimizer):
 
         return v, s
 
-    def update_parameters(self, model_parameters: dict, grads: dict, learning_rate: float = 0.01, **kwargs):
-        """
-        Update parameters using Adam
-        
+    def update_parameters(
+        self, model_parameters: dict, grads: dict, learning_rate: float = 0.01, **kwargs
+    ):
+        """Update parameters using Adam.
+
         Parameters:
         ---------
             - model_parameters: Python dictionary containing model parameters. Where:
@@ -244,21 +260,37 @@ class Adam(Optimizer):
         s_corrected = {}
 
         for l in range(1, L + 1):
-            v["dW" + str(l)] = beta1 * v["dW" + str(l)] + (1 - beta1) * grads['dW' + str(l)]
-            v["db" + str(l)] = beta1 * v["db" + str(l)] + (1 - beta1) * grads['db' + str(l)]
+            v["dW" + str(l)] = (
+                beta1 * v["dW" + str(l)] + (1 - beta1) * grads["dW" + str(l)]
+            )
+            v["db" + str(l)] = (
+                beta1 * v["db" + str(l)] + (1 - beta1) * grads["db" + str(l)]
+            )
 
-            v_corrected["dW" + str(l)] = v["dW" + str(l)] / (1 - beta1 ** t)
-            v_corrected["db" + str(l)] = v["db" + str(l)] / (1 - beta1 ** t)
+            v_corrected["dW" + str(l)] = v["dW" + str(l)] / (1 - beta1**t)
+            v_corrected["db" + str(l)] = v["db" + str(l)] / (1 - beta1**t)
 
-            s["dW" + str(l)] = beta2 * s["dW" + str(l)] + (1 - beta2) * (grads['dW' + str(l)] ** 2)
-            s["db" + str(l)] = beta2 * s["db" + str(l)] + (1 - beta2) * (grads['db' + str(l)] ** 2)
+            s["dW" + str(l)] = beta2 * s["dW" + str(l)] + (1 - beta2) * (
+                grads["dW" + str(l)] ** 2
+            )
+            s["db" + str(l)] = beta2 * s["db" + str(l)] + (1 - beta2) * (
+                grads["db" + str(l)] ** 2
+            )
 
-            s_corrected["dW" + str(l)] = s["dW" + str(l)] / (1 - beta2 ** t)
-            s_corrected["db" + str(l)] = s["db" + str(l)] / (1 - beta2 ** t)
+            s_corrected["dW" + str(l)] = s["dW" + str(l)] / (1 - beta2**t)
+            s_corrected["db" + str(l)] = s["db" + str(l)] / (1 - beta2**t)
 
-            model_parameters["W" + str(l)] = model_parameters["W" + str(l)] - learning_rate * (
-                    v_corrected["dW" + str(l)] / (np.sqrt(s_corrected["dW" + str(l)]) + epsilon))
-            model_parameters["b" + str(l)] = model_parameters["b" + str(l)] - learning_rate * (
-                    v_corrected["db" + str(l)] / (np.sqrt(s_corrected["db" + str(l)]) + epsilon))
+            model_parameters["W" + str(l)] = model_parameters[
+                "W" + str(l)
+            ] - learning_rate * (
+                v_corrected["dW" + str(l)]
+                / (np.sqrt(s_corrected["dW" + str(l)]) + epsilon)
+            )
+            model_parameters["b" + str(l)] = model_parameters[
+                "b" + str(l)
+            ] - learning_rate * (
+                v_corrected["db" + str(l)]
+                / (np.sqrt(s_corrected["db" + str(l)]) + epsilon)
+            )
 
             return model_parameters, v, s, v_corrected, s_corrected

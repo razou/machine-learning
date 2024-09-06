@@ -2,25 +2,24 @@ import argparse
 import copy
 import logging
 import os
-from typing import Tuple, Dict, Any
+from typing import Any, Dict, Tuple
 
 import numpy as np
-
-from activations import Activation, SoftMax, Sigmoid
 from ml_from_scratch.constants.data_root_dir import ROOT_DIR
 from ml_from_scratch.data_processing.data_preparation import DataPreparation
+
+from activations import Activation, Sigmoid, SoftMax
 
 logger = logging.getLogger(__name__)
 
 
 # Credit to : https://github.com/aimacode/aima-python/blob/master/deep_learning4e.py
 
+
 class Node:
-    """
-    A single unit of a layer in a neural network
-    :param weights: weights between parent nodes and current node
-    :param value: value of current node
-    """
+    """A single unit of a layer in a neural network :param weights: weights
+    between parent nodes and current node :param value: value of current
+    node."""
 
     def __init__(self, weights=None, value=None):
         """_summary_
@@ -47,7 +46,10 @@ class Layer:
 
 
 class InputLayer(Layer):
-    """1D input layer. Layer size is the same as input vector size."""
+    """1D input layer.
+
+    Layer size is the same as input vector size.
+    """
 
     def __init__(self, size=3):
         super().__init__(size)
@@ -67,22 +69,24 @@ class OutputLayer(Layer):
 
     def forward(self, inputs, activation=SoftMax):
         assert len(self.nodes) == len(inputs)
-        res = activation().function(inputs)
+        res = activation().activation_function(inputs)
         for node, val in zip(self.nodes, res):
             node.value = val
         return res
 
 
 class DenseLayer_2(Layer):
-    """
-    1D dense layer in a neural network.
+    """1D dense layer in a neural network.
+
     :param in_size: (int) input vector size
     :param out_size: (int) output vector size
     :param activation: (Activation object) activation function
     """
+
     @staticmethod
     def random_weights(min_value, max_value, num_weights):
         import random
+
         return [random.uniform(min_value, max_value) for _ in range(num_weights)]
 
     def __init__(self, in_size=3, out_size=3, activation=Sigmoid):
@@ -99,14 +103,16 @@ class DenseLayer_2(Layer):
         res = []
         # get the output value of each unit
         for unit in self.nodes:
-            val = self.activation.function(np.dot(unit.weights, inputs))
+            val = self.activation.activation_function(np.dot(unit.weights, inputs))
             unit.value = val
             res.append(val)
         return res
 
 
 class DenseLayer:
-    def __init__(self, layer_dims: Tuple[int, int, int], learning_rate: float, num_iter: int):
+    def __init__(
+        self, layer_dims: Tuple[int, int, int], learning_rate: float, num_iter: int
+    ):
         self.layer_dims = layer_dims
         self.num_iter = num_iter
         self.learning_rate = learning_rate
@@ -128,32 +134,36 @@ class DenseLayer:
         L = len(self.layer_dims)
 
         for l in range(1, L):
-            parameters['W' + str(l)] = np.random.randn(self.layer_dims[l], self.layer_dims[l - 1]) * 0.01
-            parameters['b' + str(l)] = np.zeros((self.layer_dims[l], 1))
+            parameters["W" + str(l)] = (
+                np.random.randn(self.layer_dims[l], self.layer_dims[l - 1]) * 0.01
+            )
+            parameters["b" + str(l)] = np.zeros((self.layer_dims[l], 1))
 
             logger.info("Check dimensions' consistency")
-            assert (parameters['W' + str(l)].shape == (self.layer_dims[l], self.layer_dims[l - 1]))
-            assert (parameters['b' + str(l)].shape == (self.layer_dims[l], 1))
+            assert parameters["W" + str(l)].shape == (
+                self.layer_dims[l],
+                self.layer_dims[l - 1],
+            )
+            assert parameters["b" + str(l)].shape == (self.layer_dims[l], 1)
 
         return parameters
 
     @staticmethod
     def linear_forward(A, W, b):
+        """
+        Compute linear part of the forward propagation step: Z = W^TA^{[l-1]} + b
+        Parameters
+        ----------
+        W: weights matrix
+        A_prev: activation matrix from previous layer
+        b: bias vector
+
+        Returns
+        -------
+        Z: pre-activation matrix with same shape as A_prev
+        cache: tuple of (A, W, b) cached for the backpropagation computation
 
         """
-                Compute linear part of the forward propagation step: Z = W^TA^{[l-1]} + b
-                Parameters
-                ----------
-                W: weights matrix
-                A_prev: activation matrix from previous layer
-                b: bias vector
-
-                Returns
-                -------
-                Z: pre-activation matrix with same shape as A_prev
-                cache: tuple of (A, W, b) cached for the backpropagation computation
-
-                """
 
         """
         Implement the linear part of a layer's forward propagation.
@@ -170,14 +180,13 @@ class DenseLayer:
 
         Z = W.dot(A) + b
 
-        assert (Z.shape == (W.shape[0], A.shape[1]))
+        assert Z.shape == (W.shape[0], A.shape[1])
         cache = (A, W, b)
 
         return Z, cache
 
     def linear_activation_forward(self, A_prev, W, b, activation):
-        """
-        Implement the forward propagation for the LINEAR->ACTIVATION layer
+        """Implement the forward propagation for the LINEAR->ACTIVATION layer.
 
         Arguments:
         A_prev -- activations from previous layer (or input data): (size of previous layer, number of examples)
@@ -216,8 +225,8 @@ class DenseLayer:
         return A, cache
 
     def L_model_forward(self, X, parameters):
-        """
-        Implement forward propagation for the [LINEAR->RELU]*(L-1)->LINEAR->SIGMOID computation
+        """Implement forward propagation for the
+        [LINEAR->RELU]*(L-1)->LINEAR->SIGMOID computation.
 
         Arguments:
         X -- data, numpy array of shape (input size, number of examples)
@@ -235,20 +244,23 @@ class DenseLayer:
 
         for l in range(1, L):
             A_prev = A
-            A, cache = self.linear_activation_forward(A_prev, parameters['W' + str(l)], parameters['b' + str(l)],
-                                                      activation="relu")
+            A, cache = self.linear_activation_forward(
+                A_prev,
+                parameters["W" + str(l)],
+                parameters["b" + str(l)],
+                activation="relu",
+            )
             caches.append(cache)
 
-        AL, cache = self.linear_activation_forward(A, parameters['W' + str(L)], parameters['b' + str(L)],
-                                                   activation="sigmoid")
+        AL, cache = self.linear_activation_forward(
+            A, parameters["W" + str(L)], parameters["b" + str(L)], activation="sigmoid"
+        )
         caches.append(cache)
         return AL, caches
 
     @staticmethod
     def compute_cost(A_output_layer, Y) -> float:
-
-        """
-        Implement the cost function defined by equation (7).
+        """Implement the cost function defined by equation (7).
 
         Arguments:
         AL -- probability vector corresponding to your label predictions, shape (1, number of examples)
@@ -259,15 +271,18 @@ class DenseLayer:
         """
 
         m = Y.shape[1]
-        cost = (-1 / m) * (np.dot(np.log(A_output_layer), Y.T) + np.dot(np.log(1 - A_output_layer), (1 - Y).T))
+        cost = (-1 / m) * (
+            np.dot(np.log(A_output_layer), Y.T)
+            + np.dot(np.log(1 - A_output_layer), (1 - Y).T)
+        )
         cost = np.squeeze(cost)
 
         return cost
 
     @staticmethod
     def linear_backward(dZ, cache):
-        """
-        Implement the linear portion of backward propagation for a single layer (layer l)
+        """Implement the linear portion of backward propagation for a single
+        layer (layer l)
 
         Arguments:
         dZ -- Gradient of the cost with respect to the linear output (of current layer l)
@@ -286,8 +301,7 @@ class DenseLayer:
         return dA_prev, dW, db
 
     def linear_activation_backward(self, dA, cache, activation):
-        """
-        Implement the backward propagation for the LINEAR->ACTIVATION layer.
+        """Implement the backward propagation for the LINEAR->ACTIVATION layer.
 
         Arguments:
         dA -- post-activation gradient for current layer l
@@ -312,8 +326,8 @@ class DenseLayer:
         return dA_prev, dW, db
 
     def L_model_backward(self, A_output_layer, Y, caches):
-        """
-        Implement the backward propagation for the [LINEAR->RELU] * (L-1) -> LINEAR -> SIGMOID group
+        """Implement the backward propagation for the [LINEAR->RELU] * (L-1) ->
+        LINEAR -> SIGMOID group.
 
         Arguments:
         A_output_layer -- probability vector, output of the forward propagation (L_model_forward())
@@ -330,8 +344,10 @@ class DenseLayer:
         """
         grads = {}
         L = len(caches)  # the number of layers
-        m = A_output_layer.shape[1]
-        Y = Y.reshape(A_output_layer.shape)  # after this line, Y is the same shape as AL
+        A_output_layer.shape[1]
+        Y = Y.reshape(
+            A_output_layer.shape
+        )  # after this line, Y is the same shape as AL
 
         # Initializing the backpropagation
         # (1 line of code)
@@ -344,7 +360,9 @@ class DenseLayer:
         # Lth layer (SIGMOID -> LINEAR) gradients. Inputs: "dAL, current_cache". Outputs: "grads["dAL-1"], grads["dWL"], grads["dbL"]
 
         current_cache = caches[L - 1]
-        dA_prev_temp, dW_temp, db_temp = self.linear_activation_backward(dAL, current_cache, activation="sigmoid")
+        dA_prev_temp, dW_temp, db_temp = self.linear_activation_backward(
+            dAL, current_cache, activation="sigmoid"
+        )
         grads["dA" + str(L - 1)] = dA_prev_temp
         grads["dW" + str(L)] = dW_temp
         grads["db" + str(L)] = db_temp
@@ -363,16 +381,16 @@ class DenseLayer:
             # grads["db" + str(l + 1)] = ...
             # YOUR CODE STARTS HERE
             current_cache = caches[l]
-            dA_prev_temp, dW_temp, db_temp = self.linear_activation_backward(dA_prev_temp, current_cache,
-                                                                             activation="relu")
+            dA_prev_temp, dW_temp, db_temp = self.linear_activation_backward(
+                dA_prev_temp, current_cache, activation="relu"
+            )
             grads["dA" + str(l)] = dA_prev_temp
             grads["dW" + str(l + 1)] = dW_temp
             grads["db" + str(l + 1)] = db_temp
         return grads
 
     def update_parameters(self, params, grads, learning_rate):
-        """
-        Update parameters using gradient descent
+        """Update parameters using gradient descent.
 
         Arguments:
         params -- python dictionary containing your parameters
@@ -392,8 +410,12 @@ class DenseLayer:
             # parameters["W" + str(l+1)] = ...
             # parameters["b" + str(l+1)] = ...
             # YOUR CODE STARTS HERE
-            parameters["W" + str(l + 1)] = parameters["W" + str(l + 1)] - learning_rate * grads["dW" + str(l + 1)]
-            parameters["b" + str(l + 1)] = parameters["b" + str(l + 1)] - learning_rate * grads["db" + str(l + 1)]
+            parameters["W" + str(l + 1)] = (
+                parameters["W" + str(l + 1)] - learning_rate * grads["dW" + str(l + 1)]
+            )
+            parameters["b" + str(l + 1)] = (
+                parameters["b" + str(l + 1)] - learning_rate * grads["db" + str(l + 1)]
+            )
             # YOUR CODE ENDS HERE
         return parameters
 
@@ -437,25 +459,54 @@ class DenseLayer:
 
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        prog='MLP-Classifier',
-        description='Train multi layers perceptron for image classification',
+        prog="MLP-Classifier",
+        description="Train multi layers perceptron for image classification",
     )
-    parser.add_argument('--train_filename', type=str, default="train_catvnoncat.h5",
-                        help="Train data file name")
-    parser.add_argument('--test_filename', default="test_catvnoncat.h5", help="Test data file name")
-    parser.add_argument('--data_dir', default="data", help="Data directory")
-    parser.add_argument('--learning_rate', type=float, default=0.0075, help="Learning rate")
-    parser.add_argument('--num_iterations', type=int, default=2000,
-                        help="Number of iterations (for params. optimizer)")
-    parser.add_argument('--verbose', default=False, action="store_true")
-    parser.add_argument('--visualize_cost', default=False, help="Plot cost function", action="store_true")
-    parser.add_argument('--evaluate_model', default=False, action="store_true",
-                        help="Model assessment on train and test sets")
-    parser.add_argument('--save_model', default=False, help="Save model parameters",
-                        action="store_true")
-    parser.add_argument('--model_registry', type=str, default="artefacts", help="Model registry")
-    parser.add_argument('--model_dir', type=str, default="mlp_model", help="Output dir")
-    parser.add_argument('--model_name', type=str, default="mlp", help="Model artefact name (.tar.gz file)")
+    parser.add_argument(
+        "--train_filename",
+        type=str,
+        default="train_catvnoncat.h5",
+        help="Train data file name",
+    )
+    parser.add_argument(
+        "--test_filename", default="test_catvnoncat.h5", help="Test data file name"
+    )
+    parser.add_argument("--data_dir", default="data", help="Data directory")
+    parser.add_argument(
+        "--learning_rate", type=float, default=0.0075, help="Learning rate"
+    )
+    parser.add_argument(
+        "--num_iterations",
+        type=int,
+        default=2000,
+        help="Number of iterations (for params. optimizer)",
+    )
+    parser.add_argument("--verbose", default=False, action="store_true")
+    parser.add_argument(
+        "--visualize_cost",
+        default=False,
+        help="Plot cost function",
+        action="store_true",
+    )
+    parser.add_argument(
+        "--evaluate_model",
+        default=False,
+        action="store_true",
+        help="Model assessment on train and test sets",
+    )
+    parser.add_argument(
+        "--save_model", default=False, help="Save model parameters", action="store_true"
+    )
+    parser.add_argument(
+        "--model_registry", type=str, default="artefacts", help="Model registry"
+    )
+    parser.add_argument("--model_dir", type=str, default="mlp_model", help="Output dir")
+    parser.add_argument(
+        "--model_name",
+        type=str,
+        default="mlp",
+        help="Model artefact name (.tar.gz file)",
+    )
 
     args = parser.parse_args()
     return args
@@ -466,15 +517,15 @@ def main(args: argparse.Namespace):
     data_loader = DataPreparation()
 
     # Output
-    save_model = args.save_model
-    model_name = args.model_name
+    args.save_model
+    args.model_name
     model_dir = args.model_dir
     model_registry = args.model_registry
 
     learning_rate = args.learning_rate
     num_iterations = args.num_iterations
 
-    output_dir = os.path.join(os.path.join(ROOT_DIR, model_registry), model_dir)
+    os.path.join(os.path.join(ROOT_DIR, model_registry), model_dir)
 
     # Data
     train_file_name = args.train_filename
@@ -485,19 +536,23 @@ def main(args: argparse.Namespace):
     train_data_path = os.path.join(data_dir_path, train_file_name)
     test_data_path = os.path.join(data_dir_path, test_file_name)
 
-    tidy_data = data_loader.load_data(train_path=train_data_path, test_path=test_data_path)
+    tidy_data = data_loader.load_data(
+        train_path=train_data_path, test_path=test_data_path
+    )
 
     train_x = tidy_data.train_x
     train_y = tidy_data.train_y
-    test_x = tidy_data.test_x
-    test_y = tidy_data.test_y
-    classes = tidy_data.classes
+    tidy_data.test_x
+    tidy_data.test_y
+    tidy_data.classes
 
     n_x = 12288  # num_px * num_px * 3
     n_h = 7
     n_y = 1
     layers_dims = (n_x, n_h, n_y)
-    mod = DenseLayer(learning_rate=learning_rate, num_iter=num_iterations, layer_dims=layers_dims)
+    mod = DenseLayer(
+        learning_rate=learning_rate, num_iter=num_iterations, layer_dims=layers_dims
+    )
     parameters, costs = mod.train(train_x=train_x, train_y=train_y)
 
 

@@ -4,15 +4,23 @@ from typing import List
 
 import tqdm
 from matplotlib import pyplot as plt
-
-from lr_model_train import Trainer, _parse_args
 from ml_from_scratch.constants.data_root_dir import ROOT_DIR
 from ml_from_scratch.data_processing.data_preparation import DataPreparation
+
+from lr_model_train import Trainer, _parse_args
 
 logger = logging.getLogger(__name__)
 
 
-def find_best_alpha(x_train, y_train, x_test, y_test, target_classes, learning_rates: List[float], num_iter: int):
+def find_best_alpha(
+    x_train,
+    y_train,
+    x_test,
+    y_test,
+    target_classes,
+    learning_rates: List[float],
+    num_iter: int,
+):
     trainer = Trainer()
     models = {}
 
@@ -27,12 +35,12 @@ def find_best_alpha(x_train, y_train, x_test, y_test, target_classes, learning_r
         label = str(lr)
         plt.plot(costs, label=label)
 
-    plt.ylabel('Cost')
-    plt.xlabel('Iterations (hundreds)')
+    plt.ylabel("Cost")
+    plt.xlabel("Iterations (hundreds)")
 
-    legend = plt.legend(loc='upper center', shadow=True)
+    legend = plt.legend(loc="upper center", shadow=True)
     frame = legend.get_frame()
-    frame.set_facecolor('0.90')
+    frame.set_facecolor("0.90")
     plt.show()
 
 
@@ -53,7 +61,9 @@ if __name__ == "__main__":
     test_data_path = os.path.join(data_dir_path, test_file_name)
 
     data_loader = DataPreparation()
-    tidy_data = data_loader.load_data(train_path=train_data_path, test_path=test_data_path)
+    tidy_data = data_loader.load_data(
+        train_path=train_data_path, test_path=test_data_path
+    )
 
     train_x = tidy_data.train_x
     train_y = tidy_data.train_y
@@ -70,5 +80,5 @@ if __name__ == "__main__":
         y_test=test_y,
         target_classes=classes,
         learning_rates=alpha_to_test,
-        num_iter=num_iterations
+        num_iter=num_iterations,
     )
