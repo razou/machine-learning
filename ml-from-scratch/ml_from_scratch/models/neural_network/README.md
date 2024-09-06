@@ -3,7 +3,7 @@
 Notations:
 
 - $X$: Containing training examples, stacked by `column` (i.e. vertically)
-  - $X \in \mathbb{R}^{n\times m}$ matrix (i.e, matrix of shape $(n, m)$), where $m$ corresponds to number of training examples and $n$ to number of features
+  - $X \in \mathbb{R}^{n\times m}$ matrix (i.e, matrix of shape $(n, m)$ ), where $m$ corresponds to number of training examples and $n$ to number of features
   - Each column in $X$ has a shape of $(n, 1)$ and represents one training example.
 
 $$
@@ -14,38 +14,32 @@ $$
 \end{bmatrix}
 $$
 
-- $L$: number of hidder layyers
+- $L$: number of hidden layers
 - For each hidden layer $l$ (from 1 to $L$), we note by:
 
   - $n^{[l]}$: Number of units in layer $l$
-    - Where $n^{[0]}$: number of input fetures in $X$
+    - Where $n^{[0]}$: number of input features in $X$
   - $W^{[l]}:$ Weight matrix of shape $(n^{[l]}, n^{[l-1]})$
   - $b^{[l]}:$ Bias vector of shape $(n^{[l]}, 1)$
   - $Z^{[l]}:$ Linear combination (pre-activation) at layer $l$ of shape $(n^{[l]}, m)$
   - $A^{[l]}:$ Activation at layer $l$ of shape $(n^{[l]}, m)$
     - Should have the same dimension as the matrix $Z^{[l]}$
-- $\mathcal{L}(A^{[L]}, Y)$ or $\mathcal{L}$: Loss function (evaluated on single taining eaxmple)
+- $\mathcal{L}(A^{[L]}, Y)$ or $\mathcal{L}$: Loss function (evaluated on single training example)
 
   - Measures the error for a single training example
   - Used during the computation of gradients for a single training example in methods like stochastic gradient descent(SGD)
-- $\mathcal{J}(W, b)$ or $\mathcal{J}$ : Cost function
 
+- $\mathcal{J}(W, b)$ or $\mathcal{J}$ : Cost function
   - Measures the average error over the entire training dataset.
   - Used to evaluate the overall performance of the model on the entire training set and is minimized during training.
-  - $\mathcal{J}(W, b)=\frac{1}{m}\sum_{i=1}^{m}\mathcal{L}(A^{[L](i)}, Y^{(i)})$
+  - $\mathcal{J}(W, b)=\frac{1}{m}\sum_{i=1}^{m}\mathcal{L}(A^{[L]\(i\)}, Y^{(i)})$
     - $A^{[L]}$: Predictions given by the output layer $L$
 
-      $$
-
-
-      $$
-
-  <!-- - For layer $l$, $\mathcal{J} = -\frac{1}{m} \sum\limits_{i = 1}^{m} (y^{(i)}\log\left(a^{[l] (i)}\right) + (1-y^{(i)})\log\left(1- a^{[l](i)}\right))$ -->
-
+    
 ## Example
 
 - Suppose that the size of the input matrix $X$ is $(12288, 209)$
-  - $m=209$ trainining examples
+  - $m=209$ training examples
   - $n_0=12288$
 
 <table style="width:100%">
@@ -60,7 +54,7 @@ $$
         <td> <b>Layer 1</b> </td>
         <td> $(n^{[1]},12288)$ </td>
         <td> $(n^{[1]},1)$ </td>
-        <td> $Z^{[1]} = W^{[1]}  X + b^{[1]} $ </td>
+        <td> $Z^{[1]} = W^{[1]}  X + b^{[1]}$ </td>
         <td> $(n^{[1]},209)$ </td>
     <tr>
     <tr>
@@ -103,7 +97,7 @@ For each layer $l$ from 1 to $L$:
 - $A^{[l]} = \sigma^{[l]}(Z^{[l]})$
 
   - $\sigma^{[l]}$ is the activation function of layer $l$
-    - Elemenent-wise operation (i.e., apply $\sigma^{[l]}$ function to each element of $Z^{[l]}$ matrix )
+    - Element-wise operation (i.e., apply $\sigma^{[l]}$ function to each element of $Z^{[l]}$ matrix )
 - $Z^{[l]}$ and $A^{[l]}$ are two $\mathbb{R}^{n^{[l]}\times m}$ matrix (matrices of shape $(n^{[l]}, m)$ each)
 
   - $n^{[l]}$: number of units (or nodes) for the hidden `layer` $l$  (i.e., vertical indices correspond to hidden units or neurons)
@@ -112,7 +106,7 @@ For each layer $l$ from 1 to $L$:
 $$
 \mathbf{Z^{[l]}} = \begin{bmatrix}
 | & | & & | & & | \\
-\mathbf{z}^{[l](1)} & \mathbf{z}^{[l](2)} & \cdots & \mathbf{z}^{[l](i)} & \cdots & \mathbf{z}^{[l](m)} \\
+\mathbf{z}^{[l]\(1\)} & \mathbf{z}^{[l]\(2\)} & \cdots & \mathbf{z}^{[l]\(i\)} & \cdots & \mathbf{z}^{[l]\(m\)} \\
 | & | & & | & & |
 \end{bmatrix}
 $$
@@ -120,7 +114,7 @@ $$
 $$
 \mathbf{A^{[l]}} = \begin{bmatrix}
 | & | & & | & & | \\
-\mathbf{a}^{[l](1)} & \mathbf{a}^{[l](2)} & \cdots & \mathbf{a}^{[l](i)} & \cdots & \mathbf{a}^{[l](m)} \\
+\mathbf{a}^{[l]\(1\)} & \mathbf{a}^{[l]\(2\)} & \cdots & \mathbf{a}^{[l]\(i\)} & \cdots & \mathbf{a}^{[l]\(m\)} \\
 | & | & & | & & |
 \end{bmatrix}
 $$
@@ -128,27 +122,27 @@ $$
 where:
 
 - Each column of $Z^{[l]}$ has a shape of $(n^{[l]}, 1)$ and represents the pre-activation values of all $n^{[l]}$ neurons in layer $l$ for a single training example. Equivalently each entry $Z^{[l]}[i, j]$ in the matrix $Z^{[l]}$  represents the pre-activation value for the $i^{th}$ neuron in layer $l$ for the $j^{th}$ training example.
-  - Example: the column $z^{[l](2)}$ corresponds the pre-activation values of all $n^{[l]}$ neurons in layer $l$ for the $2^{nd}$ training example.
-    - $z^{[l](2)} = (z^{[l](2)}_{1}, z^{[l](2)}_{2}, \ldots, z^{[l](2)}_{n^{[l]}})^T$
+  - Example: the column $z^{[l]\(2\)}$ corresponds the pre-activation values of all $n^{[l]}$ neurons in layer $l$ for the $2^{nd}$ training example.
+    - $z^{[l]\(2\)} = (z^{[l]\(2\)}_{1}, z^{[l]\(2\)}_{2}, \ldots, z^{[l]\(2\)}_{n^{[l]}})^T$
 - Each column of $A^{[l]}$ has a shape of $(n^{[l]}, 1)$ and represents the activations of layer $l$ for one training example. As for the matrix $Z^{[l]}$, each entry $A^{[l]}[i, j]$ in the matrix $A^{[l]}$ represents the activation value for the $i^{th}$ neuron in layer $l$ for the $j^{th}$ training example.
 
 $$
-z^{[l](i)} =
+z^{[l]\(i\)} =
     \begin{bmatrix}
-        z^{[l](i)}_{1} \\
-        z^{[l](i)}_{2} \\
+        z^{[l]\(i\)}_{1} \\
+        z^{[l]\(i\)}_{2} \\
         \vdots \\
-        z^{[l](i)}_{n^{[l]}}
+        z^{[l]\(i\)}_{n^{[l]}}
     \end{bmatrix}
 $$
 
 $$
-a^{[l](i)} = \sigma^{[l]}(z^{[l](i)}) =
+a^{[l]\(i\)} = \sigma^{[l]}(z^{[l]\(i\)}) =
    \begin{bmatrix}
-        a^{[l](i)}_{1} \\
-        a^{[l](i)}_{2} \\
+        a^{[l]\(i\)}_{1} \\
+        a^{[l]\(i\)}_{2} \\
         \vdots \\
-        a^{[l](i)}_{n^{[l]}}
+        a^{[l]\(i\)}_{n^{[l]}}
     \end{bmatrix}
 $$
 
@@ -180,10 +174,10 @@ $$
         - $\frac{\partial A^{[l]}}{\partial Z^{[l]}} = \sigma\prime^{[l]}(Z^{[l]})$: Derivative of the activation function $\sigma^{[l]}$ with respect to the weighted input $z^{[l]}$ of layer $l$
       - $dW^{[l]} = \frac{\partial \mathcal{J}(W, b)}{\partial W^{[l]}} = \frac{1}{m}dZ^{[l]}A^{[l-1]^T}$
         - matrix of shape $(n^{[l]}, n^{[l-1]})$, same dimension as $W^{[l]}$
-      - $db^{[l]} = \frac{\partial \mathcal{J}(W, b)}{\partial b^{[l]}} = \frac{1}{m}\sum_{i=1}^{m} dZ^{[l](i)}$
+      - $db^{[l]} = \frac{\partial \mathcal{J}(W, b)}{\partial b^{[l]}} = \frac{1}{m}\sum_{i=1}^{m} dZ^{(i)[l]}$
         - $i$ denote the training sample example.
         - $\frac{\partial \mathcal{J}(W, b)}{\partial b^{[l]}}$ is a vector column of shape $(n^{[l]}, 1)$, same dimension as $b^{[l]}$.
-        - Numpy expession for $db^{[l]}$ : $\frac{1}{m}np.sum(dZ^{[l]}, axis=1, keepdims=True)$
+        - Numpy expression for $db^{[l]}$ : $\frac{1}{m}np.sum(dZ^{[l]}, axis=1, keepdims=True)$
       - $dA^{[l-1]} = \frac{\partial \mathcal{J}(W, b)}{\partial A^{[l-1]}}= W^{[l]^T}dZ^{[l]}$
    2. Update parameters $W$ and $b$
 
@@ -192,7 +186,7 @@ $$
 
 ## Implementation
 
-- Hyperparamters (they control the parameters $W$ and $b$)
+- Hyperparameters (they control the parameters $W$ and $b$)
 
   - Learning rate $\eta$ (some time noted by $\alpha$)
   - Number of iterations (of gradient decent)
@@ -238,6 +232,7 @@ $$
 
 
 ## Example of use case
+
 
 1. Install `poetry`
    - `https://python-poetry.org/docs/#installation`

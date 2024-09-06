@@ -11,3 +11,7 @@ Our approach involves:
 - Assessing model performance
 - Hyperparameters tuning (e.g., find subset of parameters that lead to the best performances)
 - Creating specific visualizations (e.g., scatter plots, histograms)
+
+
+## Models
+- There is one folder per model under the `/machine-learning/ml-from-scratch/ml_from_scratch/models/` directory.
