@@ -1,6 +1,6 @@
 # Mathematical Formulation
 
-Notations:
+**Notations**:
 
 - $X$: Containing training examples, stacked by `column` (i.e. vertically)
   - $X \in \mathbb{R}^{n\times m}$ matrix (i.e, matrix of shape $(n, m)$ ), where $m$ corresponds to number of training examples and $n$ to number of features
@@ -44,21 +44,21 @@ $$
 
 <table style="width:100%">
     <tr>
-        <td>  </td>
+        <td> <b>Layer</b>   </td>
         <td> <b>Shape of W</b> </td>
         <td> <b>Shape of b</b>  </td>
         <td> <b>Activation</b> </td>
         <td> <b>Shape of Activation</b> </td>
     <tr>
     <tr>
-        <td> <b>Layer 1</b> </td>
+        <td> <b> $1$ </b> </td>
         <td> $(n^{[1]},12288)$ </td>
         <td> $(n^{[1]},1)$ </td>
         <td> $Z^{[1]} = W^{[1]}  X + b^{[1]}$ </td>
         <td> $(n^{[1]},209)$ </td>
     <tr>
     <tr>
-        <td> <b>Layer 2</b> </td>
+        <td> <b> $2$ </b> </td>
         <td> $(n^{[2]}, n^{[1]})$  </td>
         <td> $(n^{[2]},1)$ </td>
         <td>$Z^{[2]} = W^{[2]} A^{[1]} + b^{[2]}$ </td>
@@ -72,14 +72,14 @@ $$
         <td> $\vdots$  </td>
     <tr>  
    <tr>
-       <td> <b>Layer L-1</b> </td>
+       <td> <b> $L-1$ </b> </td>
         <td> $(n^{[L-1]}, n^{[L-2]})$ </td>
         <td> $(n^{[L-1]}, 1)$  </td>
         <td>$Z^{[L-1]} =  W^{[L-1]} A^{[L-2]} + b^{[L-1]}$ </td>
         <td> $(n^{[L-1]}, 209)$ </td>
    <tr>
    <tr>
-       <td> <b>Layer L</b> </td>
+       <td> <b> $L$ </b> </td>
         <td> $(n^{[L]}, n^{[L-1]})$ </td>
         <td> $(n^{[L]}, 1)$ </td>
         <td> $Z^{[L]} =  W^{[L]} A^{[L-1]} + b^{[L]}$</td>
@@ -122,28 +122,26 @@ $$
 where:
 
 - Each column of $Z^{[l]}$ has a shape of $(n^{[l]}, 1)$ and represents the pre-activation values of all $n^{[l]}$ neurons in layer $l$ for a single training example. Equivalently each entry $Z^{[l]}[i, j]$ in the matrix $Z^{[l]}$  represents the pre-activation value for the $i^{th}$ neuron in layer $l$ for the $j^{th}$ training example.
-  - Example: the column $z^{[l]\(2\)}$ corresponds the pre-activation values of all $n^{[l]}$ neurons in layer $l$ for the $2^{nd}$ training example.
-    - $z^{[l]\(2\)} = (z^{[l]\(2\)}_{1}, z^{[l]\(2\)}_{2}, \ldots, z^{[l]\(2\)}_{n^{[l]}})^T$
+  - Example: The column $z^{[l]\(2\)}$ corresponds the pre-activation values of all $n^{[l]}$ neurons in layer $l$ for the $2^{nd}$ training example.
+    - $$z^{[l]\(2\)} = (z^{[l]\(2\)}_{1}, z^{[l]\(2\)}_{2}, \ldots, z^{[l]\(2\)}_{n^{[l]}})^T$$
 - Each column of $A^{[l]}$ has a shape of $(n^{[l]}, 1)$ and represents the activations of layer $l$ for one training example. As for the matrix $Z^{[l]}$, each entry $A^{[l]}[i, j]$ in the matrix $A^{[l]}$ represents the activation value for the $i^{th}$ neuron in layer $l$ for the $j^{th}$ training example.
 
 $$
-z^{[l]\(i\)} =
-    \begin{bmatrix}
+z^{[l]\(i\)} = \begin{bmatrix}
         z^{[l]\(i\)}_{1} \\
         z^{[l]\(i\)}_{2} \\
         \vdots \\
         z^{[l]\(i\)}_{n^{[l]}}
-    \end{bmatrix}
+\end{bmatrix}
 $$
 
 $$
-a^{[l]\(i\)} = \sigma^{[l]}(z^{[l]\(i\)}) =
-   \begin{bmatrix}
+a^{[l]\(i\)} = \sigma^{[l]}(z^{[l]\(i\)}) = \begin{bmatrix}
         a^{[l]\(i\)}_{1} \\
         a^{[l]\(i\)}_{2} \\
         \vdots \\
         a^{[l]\(i\)}_{n^{[l]}}
-    \end{bmatrix}
+\end{bmatrix}
 $$
 
 ## Backpropagation
@@ -224,11 +222,11 @@ $$
 ## Misc
 
 
-| **Activation Function** | **Forward Activation**                           | **Derivative of Activation**                | **Gradient for Output Layer $(\delta^{[L]})$** | **Gradient for Hidden Layers $(\delta^{[l]})$**                                |
-| ----------------------- |--------------------------------------------------|---------------------------------------------|------------------------------------------------|--------------------------------------------------------------------------------|
-| **Sigmoid**             | $$\sigma(z) = \frac{1}{1 + e^{-z}}$$             | $$\sigma(z)(1 - \sigma(z))$$                | $$\delta^{[L]} = A^{[L]} - Y$$                 | $$\delta^{[l]} = (W^{[l+1]})^T \delta^{[l+1]} \cdot A^{[l]}(1 - A^{[l]})$$     |
-| **ReLU**                | $$\text{ReLU}(z) = \max(0, z)$$                  | $$\begin{cases} 1 & z > 0 \\ 0 & z \leq 0 \end{cases}$$ | $$\delta^{[L]} = A^{[L]} - Y$$                 | $$\delta^{[l]} = (W^{[l+1]})^T \delta^{[l+1]} \cdot \mathbf{1}_{Z^{[l]} > 0}$$ |
-| **Tanh**                | $$\tanh(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}}$$ | $$1 - \tanh^2(z)$$                          | $$\delta^{[L]} = A^{[L]} - Y$$                 | $$\delta^{[l]} = (W^{[l+1]})^T \delta^{[l+1]} \cdot (1 - (A^{[l]})^2)$$        |
+| **Activation Function** | **Forward Activation**                           | **Derivative of Activation**                              | **Gradient for Output Layer $(\delta^{[L]})$** | **Gradient for Hidden Layers $(\delta^{[l]})$**                                |
+| ----------------------- |--------------------------------------------------|-----------------------------------------------------------|------------------------------------------------|--------------------------------------------------------------------------------|
+| **Sigmoid**             | $$\sigma(z) = \frac{1}{1 + e^{-z}}$$             | $$\sigma(z)(1 - \sigma(z))$$                              | $$\delta^{[L]} = A^{[L]} - Y$$                 | $$\delta^{[l]} = (W^{[l+1]})^T \delta^{[l+1]} \cdot A^{[l]}(1 - A^{[l]})$$     |
+| **ReLU**                | $$\text{ReLU}(z) = \max(0, z)$$                  | $$ \begin{cases} 1 & \text{if } z > 0 \\ 0 & \text{if } z \leq 0 \end{cases} $$ | $$\delta^{[L]} = A^{[L]} - Y$$                 | $$\delta^{[l]} = (W^{[l+1]})^T \delta^{[l+1]} \cdot \mathbf{1}_{Z^{[l]} > 0}$$ |
+| **Tanh**                | $$\tanh(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}}$$ | $$1 - \tanh^2(z)$$                                        | $$\delta^{[L]} = A^{[L]} - Y$$                 | $$\delta^{[l]} = (W^{[l+1]})^T \delta^{[l+1]} \cdot (1 - (A^{[l]})^2)$$        |
 
 
 ## Example of use case
